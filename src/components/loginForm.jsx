@@ -34,9 +34,10 @@ class LoginForm extends Form {
                 password: data.password
             }
 
-            auth.login(credentials);
+            await auth.login(credentials);
 
-            window.location = '/';
+            const { state } = this.props.location;
+            window.location = state ? state.from : '/';
 
         } catch (ex) {
             if (ex.response && ex.response.status === 400) {

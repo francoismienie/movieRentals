@@ -12,8 +12,9 @@ class TableBody extends Component {
     }
 
     buildCellContent(item, column) {
-        if (column.content)
+        if (column.content) {
             return column.content(item);
+        }
 
         return _.get(item, column[this.props.columnName])
     }

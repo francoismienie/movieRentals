@@ -14,7 +14,7 @@ class Form extends Component {
         if (!validation.error) {
             return null;
         }
-        console.log(validation.error);
+
         return {};
     };
 
@@ -40,7 +40,7 @@ class Form extends Component {
     }
 
     handleChange = (e) => {
-        console.log('handle Change executed');
+
         e.preventDefault();
         const input = e.currentTarget;
         const { data } = { ...this.state };
@@ -55,7 +55,7 @@ class Form extends Component {
         }
 
         data[input.id] = input.value;
-        this.setState({ data, errors }, () => { console.log(this.state.data) });
+        this.setState({ data, errors });
     }
 
     renderSubmitButton = (label) => {

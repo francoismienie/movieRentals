@@ -10,13 +10,17 @@ class HeaderInfo extends Component {
 
     processCss(cssProps) {
         return cssProps;
-
     }
 
     render() {
+        const user = this.props.user;
+
         return (
             <div className={this.processCss(this.props.headerCss)}>
-                <Link to='/movies/new' className='btn btn-lg btn-primary'>New Movie</Link>
+                {user && user.isAdmin && (
+                    <Link to='/movies/new' className='btn btn-lg btn-primary'>New Movie</Link>
+                )
+                }
                 <p style={this.paragraphStyle}>{this.DisplayHeaderInfo(this.props.message)}</p>
                 <SearchBox id='searchBox' name='searchBox' searchQuery={this.props.searchQuery} autoFocus={true} handleSearch={this.props.handleSearch} />
             </div>

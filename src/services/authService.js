@@ -5,6 +5,8 @@ import jwtDecode from 'jwt-decode';
 const baseUrl = `${config.apiBaseUrl}/auth`;
 const tokenKey = 'token';
 
+http.setAuth(getToken());
+
 export async function login(credentials) {
     const { data: jwt } = await http.post(baseUrl, credentials, null);
     localStorage.setItem(tokenKey, jwt);
@@ -22,10 +24,10 @@ export function getToken() {
     return localStorage.getItem(tokenKey);
 }
 
-export async function getAuthenticatedUser() {
+export function getAuthenticatedUser() {
     try {
         const jwt = getToken();
-        return await jwtDecode(jwt);
+        return jwtDecode(jwt);
     }
     catch (ex) {
 
@@ -35,6 +37,7 @@ export async function getAuthenticatedUser() {
 export default {
     login,
     loginWithJwt,
+    getToken,
     logout,
     getAuthenticatedUser
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import ProtectedRoute from './components/protectedRoute';
 import Movies from './components/movies';
 import Customers from './components/customers';
 import Rentals from './components/rentals';
@@ -13,29 +14,20 @@ import Logout from './components/logout';
 import auth from './services/authService';
 import './App.css';
 
-
-
 class App extends Component {
   state = {};
 
-  async componentDidMount() {
-    try {
-      const user = await auth.getAuthenticatedUser();
-      this.setState({ user });
-    } catch (ex) {
-
-    }
-  }
-
   render() {
+    const user = auth.getAuthenticatedUser();
+
     return (
       <React.Fragment>
-        <Navbar user={this.state.user} />
+        <Navbar user={user} />
         <main role="main" className="container">
           <Switch>
-            <Route path='/movieform/:id' component={MovieForm} />
-            <Route path='/movies/new' component={NewMovie} />
-            <Route path='/movies' component={Movies} />
+            <ProtectedRoute path='/movieform/:id' component={MovieForm} />
+            <ProtectedRoute path='/movies/new' component={NewMovie} />
+            <ProtectedRoute path='/movies' render={props => <Movies {...props} user={user} />} />
             <Route path='/register' component={RegisterForm} />
             <Route path='/login' component={LoginForm} />
             <Route path='/logout' component={Logout} />

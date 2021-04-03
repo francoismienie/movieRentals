@@ -17,6 +17,7 @@ import { sorting } from './utils/sorting';
 
 
 class Movies extends Component {
+
     state = {
         genres: [],
         movies: [],
@@ -25,7 +26,14 @@ class Movies extends Component {
         selectedGenreId: 0,
         searchQuery: '',
         sortColumn: { column: 'title', sortDirection: 'asc' },
-        movieColumns: [{ id: 1, label: 'Title', columnName: 'title', content: item => <NavLink to={`/movieform/${item._id}`}>{item.title}</NavLink> }
+        movieColumns: [{
+            id: 1, label: 'Title', columnName: 'title', content: item => {
+                if (this.props.user)
+                    return (<NavLink to={`/movieform/${item._id}`}>{item.title}</NavLink>);
+
+                return (`${item.title}`)
+            }
+        }
             , { id: 2, label: 'Genre', columnName: 'genre.name', content: '' }
             , { id: 3, label: 'Stock', columnName: 'numberInStock', content: '' }
             , { id: 4, label: 'Rate', columnName: 'dailyRentalRate', content: '' }
@@ -34,7 +42,7 @@ class Movies extends Component {
     }
 
     componentDidMount() {
-
+        console.log(this.props);
         this.loadMovies();
         this.loadGenres();
     }
@@ -86,7 +94,7 @@ class Movies extends Component {
     }
 
     async handleMovieDelete(id) {
-        const prevMovies = this.state.movies;
+        const prevMovies = [...this.state.movies];
         const movies = prevMovies.filter(movie => movie._id !== id);
         this.setState({ movies });
 
@@ -97,7 +105,7 @@ class Movies extends Component {
             if (ex.response && ex.response.status === 404)
                 alert('Movie already deleted.')
 
-            this.setState({ prevMovies });
+            this.setState({ movies: prevMovies });
         }
     }
 
@@ -127,7 +135,7 @@ class Movies extends Component {
     render() {
 
         const data = this.loadPageMovies();
-        console.log('render');
+
         return (
             <React.Fragment>
                 <div className='grid'>
@@ -138,6 +146,7 @@ class Movies extends Component {
                         movieList={data.pageMovies}
                         onSortClick={this.handleOnSort}
                         sortColumn={this.state.sortColumn}
+
                     />
                     <Pagination onPageClick={this.handlePageClicked} itemCount={data.itemCount} pageSize={this.state.pageSize} currentPage={this.state.selectedPageNumber} />
                 </div>
