@@ -28,7 +28,7 @@ class Movies extends Component {
         sortColumn: { column: 'title', sortDirection: 'asc' },
         movieColumns: [{
             id: 1, label: 'Title', columnName: 'title', content: item => {
-                if (this.props.user)
+                if (this.props.user.isAdmin)
                     return (<NavLink to={`/movieform/${item._id}`}>{item.title}</NavLink>);
 
                 return (`${item.title}`)
@@ -38,11 +38,15 @@ class Movies extends Component {
             , { id: 3, label: 'Stock', columnName: 'numberInStock', content: '' }
             , { id: 4, label: 'Rate', columnName: 'dailyRentalRate', content: '' }
             , { id: 5, label: '', columnName: '', content: ((item) => (<Like item={item} onClick={() => { this.handleLikeClicked(item) }} />)) }
-            , { id: 6, label: '', columnName: '', content: ((item) => (<DeleteButton itemId={item._id} onDelete={(itemId) => { this.handleMovieDelete(itemId) }} />)) }]
+            , {
+            id: 6, label: '', columnName: '', content: ((item) => {
+                return this.props.user && this.props.user.isAdmin && (<DeleteButton itemId={item._id} onDelete={(itemId) => { this.handleMovieDelete(itemId) }} />)
+            })
+        }]
     }
 
     componentDidMount() {
-        console.log(this.props);
+
         this.loadMovies();
         this.loadGenres();
     }
